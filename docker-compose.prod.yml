@@ -26,7 +26,6 @@ services:
       - .env
     environment:
       DJANGO_DEBUG: "0"
-      DJANGO_ALLOWED_HOSTS: "127.0.0.1,localhost"
       MYSQL_HOST: mysql
     depends_on:
       mysql:
@@ -38,10 +37,9 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - media_data_prod:/app/media
-      - static_data_prod:/app/staticfiles
+      - ./media:/app/media
+      - ./staticfiles:/app/staticfiles
 
 volumes:
   mysql_data_prod:
-  media_data_prod:
-  static_data_prod:
+

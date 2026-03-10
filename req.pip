@@ -1,5 +1,4 @@
 Django
-PyMySQL
 python-dotenv
 django-filer
 django-admin-sortable2
