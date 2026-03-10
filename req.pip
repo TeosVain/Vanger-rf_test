@@ -9,3 +9,4 @@ django-polymorphic
 Pillow
 cryptography
 gunicorn
+mysqlclient>=2.2.1

@@ -1,4 +1,4 @@
-# Тестовое: Django + MySQL + Bootstrap + Slick
+# Тестовое 
 
 ## Требования
 - Python 3.12
