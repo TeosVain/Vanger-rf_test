@@ -1,0 +1,11 @@
+Django
+PyMySQL
+python-dotenv
+django-filer
+django-admin-sortable2
+easy-thumbnails
+django-mptt
+django-polymorphic
+Pillow
+cryptography
+gunicorn

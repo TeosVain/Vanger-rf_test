@@ -1,0 +1,47 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: venger_mysql_prod
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - mysql_data_prod:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    image: teosvain/venger-rf_test:latest
+    container_name: venger_web_prod
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DJANGO_DEBUG: "0"
+      DJANGO_ALLOWED_HOSTS: "127.0.0.1,localhost"
+      MYSQL_HOST: mysql
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: >
+      sh -c "python app/manage.py migrate &&
+             python app/manage.py collectstatic --noinput &&
+             gunicorn config.wsgi:application --chdir app --bind 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - media_data_prod:/app/media
+      - static_data_prod:/app/staticfiles
+
+volumes:
+  mysql_data_prod:
+  media_data_prod:
+  static_data_prod:

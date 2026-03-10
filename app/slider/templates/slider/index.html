@@ -1,0 +1,168 @@
+{% load static thumbnail %}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Космическое агентство</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css">
+  <link rel="stylesheet" href="{% static 'slider/styles.css' %}">
+</head>
+<body>
+  <header class="landing-header">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg navbar-dark py-3">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+          <img src="https://www.nasa.gov/wp-content/themes/nasa/assets/images/nasa-logo.svg" alt="NASA" width="48" height="40">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="mainNav">
+          <ul class="navbar-nav gap-lg-4">
+            <li class="nav-item"><a class="nav-link" href="#advantages">Преимущества</a></li>
+            <li class="nav-item"><a class="nav-link" href="#photos">Фотографии</a></li>
+          </ul>
+        </div>
+        <button class="btn btn-danger rounded-pill px-4 fw-semibold">Вход</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="landing-main">
+    <section id="advantages" class="hero-section pt-5 pb-5">
+      <div class="container">
+        <div class="row justify-content-center text-center">
+          <div class="col-lg-8">
+            <h1 class="hero-title mb-3">Космическое агентство</h1>
+            <p class="hero-subtitle mb-5">
+              Национальное управление по аэронавтике и исследованию космического пространства США.
+              Здесь собраны фотографии и короткая презентация проекта.
+            </p>
+          </div>
+        </div>
+
+        <div class="row g-4 align-items-center">
+          <div class="col-lg-6">
+            {% if slides %}
+              {% thumbnail slides.0.image.file 900x620 crop="center" as hero_thumb %}
+              <img src="{{ hero_thumb.url }}" alt="{{ slides.0.title }}" class="img-fluid hero-image">
+            {% else %}
+              <div class="hero-image hero-placeholder d-flex align-items-center justify-content-center">
+                <span>Добавьте слайды в админке</span>
+              </div>
+            {% endif %}
+          </div>
+          <div class="col-lg-6">
+            <div class="row g-4">
+              <div class="col-6">
+                <article class="advantage-card">
+                  <i class="bi bi-rocket-takeoff-fill"></i>
+                  <p>Спейс шаттлы — пилотируемые корабли</p>
+                </article>
+              </div>
+              <div class="col-6">
+                <article class="advantage-card">
+                  <i class="bi bi-binoculars-fill"></i>
+                  <p>Лучшее телескопическое оборудование</p>
+                </article>
+              </div>
+              <div class="col-6">
+                <article class="advantage-card">
+                  <i class="bi bi-moon-stars-fill"></i>
+                  <p>Исследования Луны и дальнего космоса</p>
+                </article>
+              </div>
+              <div class="col-6">
+                <article class="advantage-card">
+                  <i class="bi bi-award-fill"></i>
+                  <p>Высокие результаты в научных программах</p>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="photos" class="photo-section py-5">
+      <div class="container">
+        <h2 class="section-title text-center mb-4">Фотографии</h2>
+        {% if slides %}
+          <div class="photo-frame mx-auto">
+            <div class="slider-for mb-4">
+              {% for slide in slides %}
+                <div class="px-md-2">
+                  <button class="btn p-0 border-0 w-100 js-open-gallery" type="button" data-index="{{ forloop.counter0 }}">
+                    {% thumbnail slide.image.file 1200x720 crop="center" as main_thumb %}
+                    <img src="{{ main_thumb.url }}" alt="{{ slide.title }}" class="img-fluid w-100 slider-main-image">
+                  </button>
+                  <div class="slide-title">{{ slide.title }}</div>
+                </div>
+              {% endfor %}
+            </div>
+
+            <div class="slider-nav-wrap px-4 px-md-5">
+              <div class="slider-nav">
+                {% for slide in slides %}
+                  <div class="px-2">
+                    {% thumbnail slide.image.file 220x140 crop="center" as nav_thumb %}
+                    <img src="{{ nav_thumb.url }}" alt="{{ slide.title }}" class="img-fluid w-100 slider-nav-image">
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="alert alert-warning text-center mb-0">
+            В админке пока нет активных слайдов.
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  </main>
+
+  <div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content bg-dark">
+        <div class="modal-header border-0">
+          <h2 class="h6 text-white-50 mb-0">Полноэкранная галерея</h2>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body d-flex align-items-center p-0">
+          <div id="galleryCarousel" class="carousel slide w-100" data-bs-interval="false">
+            <div class="carousel-inner">
+              {% for slide in slides %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                  {% thumbnail slide.image.file 1920x1080 crop="center" as full_thumb %}
+                  <img src="{{ full_thumb.url }}" class="d-block w-100 fullscreen-image" alt="{{ slide.title }}">
+                  <div class="carousel-caption d-none d-md-block">
+                    <h3 class="h6">{{ slide.title }}</h3>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#galleryCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Назад</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#galleryCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Вперёд</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script src="{% static 'slider/slider.js' %}"></script>
+</body>
+</html>
